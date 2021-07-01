@@ -1,8 +1,9 @@
 .*
 !.gitignore
-!.gitkeep
 
 __pycache__
 *.pyc
 
-output/*
+# 保留一个空的output目录
+**/output/*
+!.gitkeep
