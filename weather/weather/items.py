@@ -16,6 +16,11 @@ class CityItem(scrapy.Item):
 
 
 class WeatherItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    city = scrapy.Field()
+    time = scrapy.Field()
+    temp = scrapy.Field()
+    humi = scrapy.Field()
+    maxTemp = scrapy.Field()
+    minTemp = scrapy.Field()
+    aqi = humi = scrapy.Field()
+    wind = scrapy.Field()

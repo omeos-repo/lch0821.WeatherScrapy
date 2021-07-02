@@ -4,9 +4,12 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+from scrapy.http import HtmlResponse
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
+
+from .spiders.tianqi import TianqiSpider
 
 
 class WeatherSpiderMiddleware:
@@ -78,7 +81,12 @@ class WeatherDownloaderMiddleware:
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
-        return None
+        if not isinstance(spider, TianqiSpider):
+            return None
+
+        spider.browser.get(request.url)
+        return HtmlResponse(
+            url=spider.browser.current_url, body=spider.browser.page_source, encoding='utf8', request=request)
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.

@@ -4,18 +4,26 @@
 ## 1 快速开始
 ### 1.1 配置环境
 1. 安装`Python3`
-2. 安装`scrapy`
+2. 安装必要的包
 ```sh
-pip install scrapy
+pip install scrapy, selenium
 ```
 也可以直接通过`requirement`文件安装：
 ```sh
 pip install -r requirements.txt
 ```
+3. 下载[ChromeDriver](https://sites.google.com/chromium.org/driver/)
+注意驱动版本需要和浏览器版本一致。为了方便，可以把`chromedriver`文件放到了项目虚拟环境的`bin`目录下。如果放到了其他地方，在实例化的时候需要配置路径。
+```py
+driver = webdriver.Chrome()
+# 如果所在路径在环境变量，可以省略路径，否则需要指定：
+driver = webdriver.Chrome(executable_path='path_to_chromedriver')
+```
 
 ### 1.2 运行
 ```sh
 scrapy crawl city
+scrapy crawl tianqi
 ```
 结果在`output`目录下。
 
