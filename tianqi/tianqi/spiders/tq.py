@@ -53,11 +53,11 @@ class TqSpider(scrapy.Spider):
         item['time'] = str(dt)
         item['temp'] = int(data['temp'])
         item['humi'] = int(data['sd'].replace("%", ""))
-        item['maxTemp'] = 999  # TODO: 暂时缺失，伺机补上
-        item['minTemp'] = 999  # TODO: 暂时缺失，伺机补上
+        item['maxtemp'] = 999  # TODO: 暂时缺失，伺机补上
+        item['mintemp'] = 999  # TODO: 暂时缺失，伺机补上
         item['aqi'] = int(data['aqi']) if data['aqi'] else 0
-        item['windD'] = self.wind_direction.get(data['WD'])
-        item['windS'] = int(data['WS'].replace("级", ""))
+        item['windd'] = self.wind_direction.get(data['WD'])
+        item['winds'] = int(data['WS'].replace("级", ""))
         item['rain'] = round(float(data['rain']))
         item['rain24h'] = round(float(data['rain24h']))
         item['weather'] = int(re.findall(r'\d+', data['weathercode'])[0])
