@@ -21,4 +21,4 @@ class TianqiItem(scrapy.Item):
     winds = scrapy.Field()
     rain = scrapy.Field()
     rain24h = scrapy.Field()
-    weather = scrapy.Field()
+    forecast = scrapy.Field()

@@ -60,7 +60,7 @@ class TqSpider(scrapy.Spider):
         item['winds'] = int(data['WS'].replace("级", ""))
         item['rain'] = round(float(data['rain']))
         item['rain24h'] = round(float(data['rain24h']))
-        item['weather'] = int(re.findall(r'\d+', data['weathercode'])[0])
+        item['forecast'] = int(re.findall(r'\d+', data['weathercode'])[0])
 
         yield item
 
