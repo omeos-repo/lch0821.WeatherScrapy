@@ -50,7 +50,7 @@ class TqSpider(scrapy.Spider):
         if dt - self.now > timedelta(days=1):  # 只有当跨年才会出现这种情况
             dt = dt - timedelta(years=1)
 
-        item['time'] = str(dt)
+        item['time'] = dt
         item['temp'] = int(data['temp'])
         item['humi'] = int(data['sd'].replace("%", ""))
         item['maxtemp'] = 999  # TODO: 暂时缺失，伺机补上
