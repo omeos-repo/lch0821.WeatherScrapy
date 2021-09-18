@@ -10,10 +10,22 @@ class TqSpider(scrapy.Spider):
     name = 'tq'
     allowed_domains = ['weather.com.cn']
     now = datetime.now()
+    year = str(now.year)
     base_url = 'http://d1.weather.com.cn/sk_2d'
     start_urls = ['https://j.i8tq.com/weather2020/search/city.js']
     wind_direction = {"无持续风向": 0, "东北风": 1, "东风": 2, "东南风": 3, "南风": 4,
                       "西南风": 5, "西风": 6, "西北风": 7, "北风": 8, "旋转风": 9}
+
+    headers = {
+        'Host': 'd1.weather.com.cn',
+        'Connection': 'keep-alive',
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Mobile Safari/537.36',
+        'Accept': '*/*',
+        'Referer': 'http://www.weather.com.cn/',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
+        'Cookie': f'Hm_lvt_080dabacb001ad3dc8b9b9049b36d43b=1631862973; f_city=%E5%8C%97%E4%BA%AC%7C101010300%7C; Hm_lpvt_080dabacb001ad3dc8b9b9049b36d43b={int(now.timestamp())}',
+    }
 
     def parse(self, response):
         body = response.body.decode(response.encoding)
@@ -32,9 +44,8 @@ class TqSpider(scrapy.Spider):
                     item['city'] = city
                     item['district'] = district
 
-                    next_url = f"{self.base_url}/{item['code']}.html"
-
-                    yield response.follow(url=next_url, callback=self.parse_data, meta={'item': item})
+                    next_url = f"{self.base_url}/{item['code']}.html?_={int(self.now.timestamp()*1000)}"
+                    yield response.follow(url=next_url, headers=self.headers, callback=self.parse_data, meta={'item': item})
 
     def parse_data(self, response):
         item = response.meta['item']
@@ -42,9 +53,8 @@ class TqSpider(scrapy.Spider):
         body = re.findall(r'var dataSK.+({.*})', body)[0]  # 返回里有一串字符(var dataSK)，非合法json
         data = json.loads(body)
 
-        year = str(self.now.year)
         month, day = re.findall(r'(\d\d).+(\d\d)', data['date'])[0]
-        dt_string = f"{year}-{month}-{day} {data['time']}"  # yyyy-mm-dd hh:mm
+        dt_string = f"{self.year}-{month}-{day} {data['time']}"  # yyyy-mm-dd hh:mm
         dt = datetime.strptime(dt_string, "%Y-%m-%d %H:%M")
 
         if dt - self.now > timedelta(days=1):  # 只有当跨年才会出现这种情况
